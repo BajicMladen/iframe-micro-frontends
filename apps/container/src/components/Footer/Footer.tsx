@@ -17,13 +17,9 @@ const Footer: React.FC = () => {
       <div className='border-b border-white py-4'>
         <div className='flex justify-between container mx-auto w-[80%]'>
           <div className='flex flex-col justify-between'>
-            <div className='flex flex-row items-center'>
+            <div className='flex flex-row items-center bg-white'>
               <img src={logo} alt='Logo' />
-              <img
-                src={logoText}
-                alt='Logo'
-                style={{ backgroundColor: 'white' }}
-              />
+              <img src={logoText} alt='Logo' />
             </div>
             <div className='flex gap-4'>
               <a
@@ -84,7 +80,7 @@ const Footer: React.FC = () => {
               </div>
               <div className='flex items-center'>
                 <FaMapMarkerAlt />
-                <span className='ml-2'>123 Main St, Anytown, USA</span>
+                <span className='ml-2'>123 Main St, Belgrade, Serbia</span>
               </div>
               <div className='flex items-center'>
                 <FaClock />
