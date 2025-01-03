@@ -7,7 +7,7 @@
   let isLoading = true
 
   onMount(async () => {
-    books = await fetchBooks('programming') // You can change the query here
+    books = await fetchBooks('javascript') // You can change the query here
     isLoading = false
   })
 </script>
