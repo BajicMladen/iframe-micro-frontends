@@ -1,33 +1,35 @@
 {
-    "editor.formatOnSave": true,
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "[javascript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescript]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[javascriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[css]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "[json]": {
-      "editor.defaultFormatter": "esbenp.prettier-vscode"
-    },
-    "prettier.singleQuote": true, // Use single quotes instead of double quotes
-    "prettier.trailingComma": "all", // Add trailing commas where valid in ES5
-    "prettier.jsxSingleQuote": true, // Use single quotes in JSX
-    "prettier.semi": true, // Add semicolons
-    "prettier.arrowParens": "always", // Include parentheses in arrow functions
-    "eslint.format.enable": true, // Enable ESLint as a formatter
-    "prettier.requireConfig": true,
-    "editor.codeActionsOnSave": {
-      "source.fixAll.eslint": true // Auto-fix ESLint issues on save
-    }
+  "editor.formatOnSave": true,
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[css]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[svelte]": {
+    "editor.defaultFormatter": "svelte.svelte-vscode",
+    "editor.formatOnSave": true // Ensure format on save is enabled for Svelte
+  },
+  "prettier.singleQuote": true, // Use single quotes instead of double quotes
+  "prettier.trailingComma": "all", // Add trailing commas where valid in ES5
+  "prettier.jsxSingleQuote": true, // Use single quotes in JSX
+  "prettier.semi": true, // Add semicolons
+  "prettier.arrowParens": "always", // Include parentheses in arrow functions
+  "eslint.format.enable": true, // Enable ESLint as a formatter
+  "prettier.requireConfig": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true // Auto-fix ESLint issues on save
   }
-  
+}
