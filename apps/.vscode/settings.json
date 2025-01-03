@@ -1,5 +1,5 @@
 {
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": true, // Enable format on save globally
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
@@ -18,18 +18,16 @@
   "[json]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
   "[svelte]": {
-    "editor.defaultFormatter": "svelte.svelte-vscode",
-    "editor.formatOnSave": true // Ensure format on save is enabled for Svelte
+    "editor.defaultFormatter": "svelte.svelte-vscode" // Use Svelte-specific formatter for Svelte files
   },
   "prettier.singleQuote": true, // Use single quotes instead of double quotes
   "prettier.trailingComma": "all", // Add trailing commas where valid in ES5
   "prettier.jsxSingleQuote": true, // Use single quotes in JSX
   "prettier.semi": true, // Add semicolons
   "prettier.arrowParens": "always", // Include parentheses in arrow functions
-  "eslint.format.enable": true, // Enable ESLint as a formatter
-  "prettier.requireConfig": true,
-  "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true // Auto-fix ESLint issues on save
-  }
+  "prettier.requireConfig": true // Ensure Prettier uses the project's config
 }
