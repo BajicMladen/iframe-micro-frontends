@@ -63,16 +63,11 @@
           </div>
 
           <!-- Actions -->
-          <div class="flex gap-4">
-            <button
-              class="px-4 py-2 bg-purple-400 text-white hover:bg-purple-600"
-              @click="addToCart"
-            >
+          <div class="flex gap-4 w-3/5">
+            <Button @click="addToCart" :variant="'primary'">
               Add to cart
-            </button>
-            <button class="px-4 py-2 border border-gray-300 hover:bg-gray-100">
-              Favorite
-            </button>
+            </Button>
+            <Button :variant="'secondary'"> Favorite </Button>
           </div>
         </div>
         <!-- Additional Info -->
@@ -100,7 +95,11 @@
 </template>
 
 <script>
+import Button from './components/Button.vue';
 export default {
+  components: {
+    Button,
+  },
   data() {
     return {
       book: {
