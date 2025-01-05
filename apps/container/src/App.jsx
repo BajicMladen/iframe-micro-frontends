@@ -11,7 +11,7 @@ function App() {
         style={{
           border: 'none',
           width: '100%',
-          height: '60vh',
+          height: '70vh',
           overflow: 'hidden',
           scrolling: 'no',
         }}

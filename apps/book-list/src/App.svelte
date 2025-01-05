@@ -12,7 +12,7 @@
   })
 </script>
 
-<div class=" flex w-full overflow-hidden h-full items-center justify-center">
+<div class="flex w-full overflow-hidden h-full items-center justify-center">
   {#if isLoading}
     <p class="text-center text-lg">Loading books...</p>
   {:else}
