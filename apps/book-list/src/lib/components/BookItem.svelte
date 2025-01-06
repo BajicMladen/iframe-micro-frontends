@@ -3,6 +3,10 @@
 
   export let book = {} // The book data is passed as a prop
 
+  import { createEventDispatcher } from 'svelte'
+
+  const dispatch = createEventDispatcher()
+
   const likeBook = () => {
     book.liked = !book.liked
   }
@@ -10,9 +14,18 @@
   const addToCart = () => {
     alert(`Added "${book.volumeInfo.title}" to cart!`)
   }
+
+  const showSingleBook = () => {
+    dispatch('showSingleBook', { id: book.id })
+  }
 </script>
 
-<div class="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+<button
+  class="bg-white shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+  on:click={showSingleBook}
+  on:keydown={e => e.key === 'Enter' && showSingleBook()}
+  aria-label={`Show details for ${book.volumeInfo.title}`}
+>
   <div class="relative">
     <img
       class="w-full h-72 object-cover"
@@ -34,4 +47,4 @@
   <div class="flex justify-center items-center p-4">
     <Button on:click={addToCart}>Add to Cart</Button>
   </div>
-</div>
+</button>

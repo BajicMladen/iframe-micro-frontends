@@ -109,6 +109,7 @@
 <script>
 import Button from './components/Button.vue';
 import artOfCoding from './assets/artOfCoding.jpg';
+import { registerMessageListener } from '../../../shared/communication';
 
 export default {
   components: {
@@ -180,11 +181,34 @@ export default {
         `Added ${this.quantity} copies of "${this.book.title}" to your cart!`
       );
     },
+    getAction(actionType) {
+      const actions = {
+        SHOW_SINGLE_BOOK: this.fetchBookDetails,
+      };
+      return actions[actionType] || this.noop;
+    },
+    noop() {
+      console.warn('Unsupported action type received.');
+    },
   },
   mounted() {
-    const bookId = null; // Set to null to show the placeholder view initially
-    if (bookId) {
-      this.fetchBookDetails(bookId);
+    this.unregisterListener = registerMessageListener(
+      'COMMUNICATION',
+      (data) => {
+        const action = this.getAction(data.action);
+        action(data.payload);
+      }
+    );
+
+    // Clean up the listener on component unmount
+    this.$once('hook:beforeDestroy', () => {
+      unregisterListener();
+    });
+  },
+  beforeDestroy() {
+    // Clean up the listener on component destroy
+    if (this.unregisterListener) {
+      this.unregisterListener();
     }
   },
 };
