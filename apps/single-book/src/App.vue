@@ -1,6 +1,45 @@
 <template>
-  <div class="flex w-full overflow-hidden h-full items-center justify-center">
-    <div class="flex gap-8 p-8 w-4/5">
+  <div class="flex w-full h-full items-center justify-center mt-4">
+    <!-- Placeholder View -->
+    <div
+      v-if="!book.title"
+      class="flex flex-col items-center justify-center gap-4 p-8 w-4/5 text-center bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg"
+    >
+      <h1 class="text-4xl font-bold">Welcome to BookStore!</h1>
+      <p class="text-lg">
+        Check out our latest collection of books. Here's a featured title for
+        you!
+      </p>
+      <div class="flex flex-col md:flex-row gap-6 items-center">
+        <!-- Featured Book -->
+        <div class="flex flex-col items-center w-4/5">
+          <img
+            :src="artOfCoding"
+            alt="Featured Book Cover"
+            class="w-52 h-68 object-cover rounded-lg shadow-md"
+          />
+          <h2 class="text-2xl font-semibold mt-4">The Art of Coding</h2>
+          <p class="text-sm">
+            Mohammad Majid al-Rifaie, Anna Ursyn, Theodor Wyeld
+          </p>
+        </div>
+        <div class="flex flex-col text-left">
+          <p class="text-xl font-medium">Price: $24.99</p>
+          <p class="">
+            Discover the secrets to becoming a coding expert. This book offers
+            insights and practical advice for all levels, whether you're a
+            beginner just starting your programming journey or an experienced
+            developer looking to refine your skills. Dive into real-world
+            examples, step-by-step tutorials, and expert tips that will guide
+            you through mastering key concepts, writing clean code, and solving
+            complex problems efficiently
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Book Details View -->
+    <div v-else class="flex gap-8 p-8 w-4/5">
       <!-- Left Column: Thumbnails -->
       <div class="flex flex-col gap-4 w-20">
         <div
@@ -26,31 +65,9 @@
       <div class="flex flex-col gap-6 flex-1">
         <div class="text-2xl font-bold">{{ book.title }}</div>
         <div class="text-md text-gray-400">By {{ book.author }}</div>
-
-        <!-- Rating -->
-        <!-- <div class="flex items-center gap-2">
-          <span
-            v-for="star in 5"
-            :key="star"
-            class="text-xl"
-            :class="{
-              'text-yellow-500': star <= book.rating,
-              'text-gray-300': star > book.rating,
-            }"
-          >
-            ★
-          </span>
-          <span class="text-gray-600">{{ book.rating }}</span>
-        </div> -->
-
-        <!-- Price -->
         <div class="text-xl font-semibold">${{ book.price }}</div>
-
-        <!-- Description -->
         <div class="text-gray-600">{{ book.description }}</div>
-
-        <!-- Quantity Selector -->
-        <div class="flex flex-row items-center gap-6">
+        <div class="flex items-center gap-6">
           <div class="flex items-center gap-4">
             <label for="quantity" class="text-gray-700">Quantity:</label>
             <input
@@ -61,16 +78,11 @@
               class="w-16 p-2 border border-gray-300"
             />
           </div>
-
-          <!-- Actions -->
           <div class="flex gap-4 w-3/5">
-            <Button @click="addToCart" :variant="'primary'">
-              Add to cart
-            </Button>
-            <Button :variant="'secondary'"> Favorite </Button>
+            <Button @click="addToCart" :variant="'primary'">Add to cart</Button>
+            <Button :variant="'secondary'">Favorite</Button>
           </div>
         </div>
-        <!-- Additional Info -->
         <div class="text-sm text-gray-600 flex flex-row gap-6">
           <div>
             <strong class="text-purple-400">Publisher:</strong>
@@ -96,12 +108,15 @@
 
 <script>
 import Button from './components/Button.vue';
+import artOfCoding from './assets/artOfCoding.jpg';
+
 export default {
   components: {
     Button,
   },
   data() {
     return {
+      artOfCoding,
       book: {
         title: '',
         author: '',
@@ -124,7 +139,6 @@ export default {
       const doc = parser.parseFromString(htmlString, 'text/html');
       return doc.body.textContent.trim();
     },
-
     async fetchBookDetails(bookId) {
       try {
         const response = await fetch(
@@ -137,7 +151,7 @@ export default {
           title: volumeInfo.title,
           author: volumeInfo.authors?.join(', ') || 'Unknown Author',
           rating: volumeInfo.averageRating || 0,
-          price: (data.saleInfo?.listPrice?.amount || 12.49).toFixed(2), // Default price fallback
+          price: (data.saleInfo?.listPrice?.amount || 12.49).toFixed(2),
           description:
             this.parseHTMLtoText(volumeInfo.description)
               .substring(0, 500)
@@ -168,9 +182,10 @@ export default {
     },
   },
   mounted() {
-    // Replace "BOOK_ID" with the actual Google Books ID of the book you want to fetch
-    const bookId = 'n_xTEAAAQBAJ';
-    this.fetchBookDetails(bookId);
+    const bookId = null; // Set to null to show the placeholder view initially
+    if (bookId) {
+      this.fetchBookDetails(bookId);
+    }
   },
 };
 </script>
