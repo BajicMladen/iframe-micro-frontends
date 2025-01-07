@@ -20,6 +20,7 @@ const Search: React.FC<SearchProps> = ({ onSearch }) => {
   }, [query, debounceTime, onSearch]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    debugger;
     setQuery(event.target.value);
   };
 

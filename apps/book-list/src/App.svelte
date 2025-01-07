@@ -2,14 +2,41 @@
   import { onMount } from 'svelte'
   import { fetchBooks } from './api/api'
   import BookItem from './lib/components/BookItem.svelte'
-  import { sendMessage } from '../../../shared/communication'
+  import { registerMessageListener, sendMessage } from '../../../shared/communication'
 
   let books = []
   let isLoading = true
 
-  onMount(async () => {
-    books = await fetchBooks('javascript')
+  async function getBooksFromGoogleApi(query) {
+    books = await fetchBooks(query)
     isLoading = false
+  }
+
+  function getAction(actionType) {
+    const actions = {
+      SEARCH_BOOK_LIST: getBooksFromGoogleApi,
+    }
+    return actions[actionType] || noop
+  }
+
+  function noop() {
+    console.warn('Unsupported action type received.')
+  }
+
+  onMount(() => {
+    const unregisterListener = registerMessageListener('COMMUNICATION', data => {
+      debugger
+      const action = getAction(data.action)
+      action(data.payload)
+    })
+
+    ;(async () => {
+      books = await fetchBooks('javascript')
+      isLoading = false
+    })()
+
+    // Return cleanup function
+    return unregisterListener
   })
 
   const showSingleBook = e => {

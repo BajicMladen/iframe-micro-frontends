@@ -5,7 +5,7 @@ import Search from '../Search/Search';
 import { FaShoppingCart, FaHeart, FaUser, FaPhoneAlt } from 'react-icons/fa';
 import Button from '../Button/Button';
 
-const Header = () => {
+const Header = ({ handleSearch }) => {
   return (
     <div className='w-full flex flex-col justify-center items-center'>
       <div className='w-full border-b-2 border-purple-400 flex items-center justify-center min-h-16'>
@@ -14,7 +14,7 @@ const Header = () => {
             <img src={logo} alt='Logo' />
             <img src={logoText} alt='Logo' />
           </div>
-          <Search onSearch={(value) => console.log(value)}></Search>
+          <Search onSearch={(value) => handleSearch(value)}></Search>
           <div className='flex flex-row items-center gap-4 text-sm text-gray-400'>
             <div className='cursor-pointer'>Privacy Policy</div>
             <div className='cursor-pointer'>Warranty</div>

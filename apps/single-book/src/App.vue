@@ -5,7 +5,7 @@
       v-if="!book.title"
       class="flex flex-col items-center justify-center gap-4 p-8 w-4/5 text-center bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg"
     >
-      <h1 class="text-4xl font-bold">Welcome to BookStore!</h1>
+      <h1 class="text-4xl font-bold">Welcome to B-World!</h1>
       <p class="text-lg">
         Check out our latest collection of books. Here's a featured title for
         you!
@@ -199,11 +199,6 @@ export default {
         action(data.payload);
       }
     );
-
-    // Clean up the listener on component unmount
-    this.$once('hook:beforeDestroy', () => {
-      unregisterListener();
-    });
   },
   beforeDestroy() {
     // Clean up the listener on component destroy

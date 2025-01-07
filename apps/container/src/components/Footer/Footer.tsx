@@ -11,7 +11,22 @@ import logo from '../../assets/logo.png';
 import logoText from '../../assets/logoText.png';
 import Button from '../Button/Button';
 
-const Footer: React.FC = () => {
+const FOOTER_BOOK_CATEGORIES = [
+  {
+    title: 'Categories',
+    items: ['Pathology', 'Fantasy', 'Self Help', 'Romance', 'Mystery'],
+  },
+  {
+    title: 'For Kids',
+    items: ['Games', 'Comics', 'Fantasy'],
+  },
+  {
+    title: 'E-Book',
+    items: ['Fiction', 'Historical', 'Horror'],
+  },
+];
+
+const Footer = ({ handleSearch }) => {
   return (
     <div className='bg-purple-400 text-gray-100'>
       <div className='border-b border-white py-4'>
@@ -45,32 +60,22 @@ const Footer: React.FC = () => {
               </a>
             </div>
           </div>
-          <div>
-            <div className='font-normal mb-2'>Categories</div>
-            <div className='text-sm flex flex-col gap-1'>
-              <div className='cursor-pointer'>Pathology</div>
-              <div className='cursor-pointer'>Fantasy</div>
-              <div className='cursor-pointer'>Self Help</div>
-              <div className='cursor-pointer'>Romance</div>
-              <div className='cursor-pointer'>Mystery</div>
+          {FOOTER_BOOK_CATEGORIES.map((section) => (
+            <div key={section.title}>
+              <div className='font-normal mb-2'>{section.title}</div>
+              <div className='text-sm flex flex-col gap-1'>
+                {section.items.map((item) => (
+                  <div
+                    key={item}
+                    className='cursor-pointer'
+                    onClick={() => handleSearch(item)}
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
-          <div>
-            <div className='font-normal mb-2'>For Kids</div>
-            <div className='text-sm flex flex-col gap-1'>
-              <div className='cursor-pointer'>Games</div>
-              <div className='cursor-pointer'>Comics</div>
-              <div className='cursor-pointer'>Fantasy</div>
-            </div>
-          </div>
-          <div>
-            <div className='font-normal mb-2'>E-Book</div>
-            <div className='text-sm flex flex-col gap-1'>
-              <div className='cursor-pointer'>Fiction</div>
-              <div className='cursor-pointer'>Historical</div>
-              <div className='cursor-pointer'>Horror</div>
-            </div>
-          </div>
+          ))}
           <div>
             <div className='font-normal mb-2'>Help & Contact</div>
             <div className='text-sm flex flex-col gap-2'>

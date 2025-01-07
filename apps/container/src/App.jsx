@@ -12,6 +12,11 @@ const ACTIONS_FACTORY = {
     type: 'COMMUNICATION',
     frameName: 'single-book',
   },
+  SEARCH_BOOK_LIST: {
+    origin: 'http://localhost:5174',
+    type: 'COMMUNICATION',
+    frameName: 'book-list',
+  },
 };
 
 function App() {
@@ -37,9 +42,19 @@ function App() {
     };
   }, []);
 
+  const handleSearch = (value) => {
+    const ACTION = ACTIONS_FACTORY['SEARCH_BOOK_LIST'];
+    sendMessage(
+      document.getElementById(ACTION.frameName).contentWindow,
+      ACTION.origin,
+      ACTION.type,
+      { action: 'SEARCH_BOOK_LIST', payload: value },
+    );
+  };
+
   return (
     <div className='w-full h-screen overflow-y-scroll'>
-      <Header></Header>
+      <Header handleSearch={(value) => handleSearch(value)}></Header>
       <iframe
         src='http://localhost:5175'
         title='Single Book'
@@ -66,7 +81,7 @@ function App() {
           scrolling: 'no',
         }}
       />
-      <Footer></Footer>
+      <Footer handleSearch={(value) => handleSearch(value)}></Footer>
     </div>
   );
 }
