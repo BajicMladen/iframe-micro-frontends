@@ -14,7 +14,7 @@ const Header = ({ handleSearch, cart, onRemoveItem }) => {
   };
 
   return (
-    <header className='w-full flex flex-col justify-center items-center'>
+    <header className='w-full flex flex-col justify-center items-center sticky top-0 z-50 bg-white'>
       <nav className='w-full border-b-2 border-purple-400 flex items-center justify-center min-h-16'>
         <div className='w-[80%] flex flex-row justify-between items-center'>
           <div className='flex flex-row items-center'>

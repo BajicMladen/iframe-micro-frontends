@@ -1,4 +1,5 @@
 <script>
+  import { sendMessage } from '../../../../../shared/communication'
   import Button from './Button.svelte'
   import { createEventDispatcher } from 'svelte'
 
@@ -6,12 +7,16 @@
 
   const dispatch = createEventDispatcher()
 
-  const likeBook = () => {
-    book.liked = !book.liked
-  }
-
   const addToCart = () => {
-    alert(`Added "${book.volumeInfo.title}" to cart!`)
+    sendMessage(window.parent, 'http://localhost:5173', 'COMMUNICATION', {
+      action: 'ADD_TO_CART',
+      payload: {
+        title: book.volumeInfo.title,
+        image: book.volumeInfo.imageLinks?.thumbnail,
+        bookId: book.id,
+        quantity: 1,
+      },
+    })
   }
 
   const showSingleBook = () => {
@@ -44,6 +49,11 @@
 
   <!-- Add to Cart Button -->
   <div class="flex justify-center items-center p-4">
-    <Button on:click={addToCart}>Add to Cart</Button>
+    <Button
+      on:click={e => {
+        event.stopPropagation()
+        addToCart()
+      }}>Add to Cart</Button
+    >
   </div>
 </button>
