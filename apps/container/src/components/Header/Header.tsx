@@ -35,7 +35,7 @@ const Header = ({ handleSearch, cart, onRemoveItem }) => {
             <div className='relative' onClick={toggleDropdown}>
               <FaShoppingCart className='cursor-pointer' />
               {cart.length > 0 && (
-                <span className='absolute bottom-3 left-4 bg-red-500 text-white rounded-full text-xs w-3 h-3 flex items-center justify-center'>
+                <span className='absolute bottom-3 left-4 bg-purple-700 text-white rounded-full text-xs w-3 h-3 flex items-center justify-center'>
                   {cart.length}
                 </span>
               )}

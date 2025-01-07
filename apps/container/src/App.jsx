@@ -29,6 +29,7 @@ function App() {
     }
 
     // Register a listener for messages from the Vue iframe
+    console.log('Setting up message listener');
     const unregisterListener = registerMessageListener(
       'COMMUNICATION',
       (data) => {
@@ -51,6 +52,7 @@ function App() {
     );
 
     return () => {
+      console.log('Cleaning up message listener');
       unregisterListener();
     };
   }, []);

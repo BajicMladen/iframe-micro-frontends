@@ -78,11 +78,10 @@
               class="w-16 p-2 border border-gray-300"
             />
           </div>
-          <div class="flex gap-4 w-3/5">
+          <div class="flex gap-4 w-2/5">
             <Button @handleClick="addToCart" :variant="'primary'"
               >Add to cart</Button
             >
-            <Button :variant="'secondary'">Favorite</Button>
           </div>
         </div>
         <div class="text-sm text-gray-600 flex flex-row gap-6">
@@ -175,6 +174,7 @@ export default {
           ],
         };
         this.mainImage = this.book.images[0];
+        this.quantity = 1;
       } catch (error) {
         console.error('Error fetching book details:', error);
       }
