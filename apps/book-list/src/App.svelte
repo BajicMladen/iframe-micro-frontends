@@ -6,10 +6,18 @@
 
   let books = []
   let isLoading = true
+  let error = null
 
   async function getBooksFromGoogleApi(query) {
-    books = await fetchBooks(query)
-    isLoading = false
+    try {
+      isLoading = true
+      books = await fetchBooks(query)
+    } catch (err) {
+      error = 'Failed to fetch books'
+      console.error(err)
+    } finally {
+      isLoading = false
+    }
   }
 
   function getAction(actionType) {
@@ -25,17 +33,14 @@
 
   onMount(() => {
     const unregisterListener = registerMessageListener('COMMUNICATION', data => {
-      debugger
       const action = getAction(data.action)
       action(data.payload)
     })
 
     ;(async () => {
-      books = await fetchBooks('javascript')
-      isLoading = false
+      await getBooksFromGoogleApi('javascript')
     })()
 
-    // Return cleanup function
     return unregisterListener
   })
 
@@ -50,6 +55,8 @@
 <div class="flex w-full overflow-hidden h-full items-center justify-center">
   {#if isLoading}
     <p class="text-center text-lg">Loading books...</p>
+  {:else if error}
+    <p class="text-center text-lg text-red-500">{error}</p>
   {:else}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 p-4 w-4/5">
       {#each books as book}

@@ -1,9 +1,8 @@
 <script>
   import Button from './Button.svelte'
+  import { createEventDispatcher } from 'svelte'
 
   export let book = {} // The book data is passed as a prop
-
-  import { createEventDispatcher } from 'svelte'
 
   const dispatch = createEventDispatcher()
 
