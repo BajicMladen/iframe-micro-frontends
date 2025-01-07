@@ -1,12 +1,12 @@
 import Footer from './components/Footer/Footer.tsx';
 import Header from './components/Header/Header.tsx';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import {
   registerMessageListener,
   sendMessage,
 } from '../../../shared/communication.ts';
 
-const ACTIONS_FACTORY = {
+const IFRAME_ACTION_ROUTER = {
   SHOW_SINGLE_BOOK: {
     origin: 'http://localhost:5175',
     type: 'COMMUNICATION',
@@ -20,30 +20,67 @@ const ACTIONS_FACTORY = {
 };
 
 function App() {
+  const [cart, setCart] = useState([]);
+
   useEffect(() => {
+    const savedCart = localStorage.getItem('cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+
     // Register a listener for messages from the Vue iframe
     const unregisterListener = registerMessageListener(
       'COMMUNICATION',
       (data) => {
-        const ACTION = ACTIONS_FACTORY[data.action];
+        const selfActionHandler = SELF_HANDLED_ACTIONS[data.action];
+        if (selfActionHandler) {
+          selfActionHandler(data);
+          return;
+        }
+
+        const ACTION = IFRAME_ACTION_ROUTER[data.action];
         if (!ACTION) return;
-        sendMessage(
-          document.getElementById(ACTION.frameName).contentWindow,
-          ACTION.origin,
-          ACTION.type,
-          data,
-        );
+
+        const iframeWindow = document.getElementById(
+          ACTION.frameName,
+        )?.contentWindow;
+        if (iframeWindow) {
+          sendMessage(iframeWindow, ACTION.origin, ACTION.type, data);
+        }
       },
     );
 
-    // Clean up the listener on component unmount
     return () => {
       unregisterListener();
     };
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem('cart', JSON.stringify(cart));
+  }, [cart]);
+
+  const SELF_HANDLED_ACTIONS = {
+    ADD_TO_CART: (data) => {
+      setCart((prevCart) => {
+        const existingItemIndex = prevCart.findIndex(
+          (item) => item.bookId === data.payload.bookId,
+        );
+        if (existingItemIndex !== -1) {
+          const updatedCart = [...prevCart];
+          updatedCart[existingItemIndex].quantity += data.payload.quantity;
+          return updatedCart;
+        } else {
+          return [
+            ...prevCart,
+            { ...data.payload, quantity: data.payload.quantity },
+          ];
+        }
+      });
+    },
+  };
+
   const handleSearch = (value) => {
-    const ACTION = ACTIONS_FACTORY['SEARCH_BOOK_LIST'];
+    const ACTION = IFRAME_ACTION_ROUTER['SEARCH_BOOK_LIST'];
     sendMessage(
       document.getElementById(ACTION.frameName).contentWindow,
       ACTION.origin,
@@ -52,9 +89,20 @@ function App() {
     );
   };
 
+  const removeItemFromCart = (bookId) => {
+    setCart((prevCart) => {
+      const updatedCart = prevCart.filter((item) => item.bookId !== bookId);
+      return updatedCart;
+    });
+  };
+
   return (
     <div className='w-full h-screen overflow-y-scroll'>
-      <Header handleSearch={(value) => handleSearch(value)}></Header>
+      <Header
+        handleSearch={(value) => handleSearch(value)}
+        onRemoveItem={(bookId) => removeItemFromCart(bookId)}
+        cart={cart}
+      ></Header>
       <iframe
         src='http://localhost:5175'
         title='Single Book'

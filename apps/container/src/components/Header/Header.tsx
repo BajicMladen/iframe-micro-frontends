@@ -1,11 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logo from '../../assets/logo.png';
 import logoText from '../../assets/logoText.png';
 import Search from '../Search/Search';
 import { FaShoppingCart, FaHeart, FaUser, FaPhoneAlt } from 'react-icons/fa';
 import Button from '../Button/Button';
+import CartDropdown from '../CartDropdown/CartDropdown';
 
-const Header = ({ handleSearch }) => {
+const Header = ({ handleSearch, cart, onRemoveItem }) => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <header className='w-full flex flex-col justify-center items-center'>
       <nav className='w-full border-b-2 border-purple-400 flex items-center justify-center min-h-16'>
@@ -24,8 +31,18 @@ const Header = ({ handleSearch }) => {
               ),
             )}
           </div>
-          <div className='flex flex-row items-center justify-center text-purple-400 gap-1'>
-            <FaShoppingCart className='cursor-pointer' />
+          <div className='flex flex-row items-center justify-center text-purple-400 gap-1 relative'>
+            <div className='relative' onClick={toggleDropdown}>
+              <FaShoppingCart className='cursor-pointer' />
+              {cart.length > 0 && (
+                <span className='absolute bottom-3 left-4 bg-red-500 text-white rounded-full text-xs w-3 h-3 flex items-center justify-center'>
+                  {cart.length}
+                </span>
+              )}
+            </div>
+            {isDropdownOpen && (
+              <CartDropdown cart={cart} onRemoveItem={onRemoveItem} />
+            )}
             <span className='mx-2'>|</span>
             <FaHeart className='cursor-pointer' />
             <span className='mx-2'>|</span>

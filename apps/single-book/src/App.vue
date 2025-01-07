@@ -79,7 +79,9 @@
             />
           </div>
           <div class="flex gap-4 w-3/5">
-            <Button @click="addToCart" :variant="'primary'">Add to cart</Button>
+            <Button @handleClick="addToCart" :variant="'primary'"
+              >Add to cart</Button
+            >
             <Button :variant="'secondary'">Favorite</Button>
           </div>
         </div>
@@ -109,7 +111,10 @@
 <script>
 import Button from './components/Button.vue';
 import artOfCoding from './assets/artOfCoding.jpg';
-import { registerMessageListener } from '../../../shared/communication';
+import {
+  registerMessageListener,
+  sendMessage,
+} from '../../../shared/communication';
 
 export default {
   components: {
@@ -149,6 +154,7 @@ export default {
         const volumeInfo = data.volumeInfo;
 
         this.book = {
+          id: data.id,
           title: volumeInfo.title,
           author: volumeInfo.authors?.join(', ') || 'Unknown Author',
           rating: volumeInfo.averageRating || 0,
@@ -177,9 +183,15 @@ export default {
       this.mainImage = image;
     },
     addToCart() {
-      alert(
-        `Added ${this.quantity} copies of "${this.book.title}" to your cart!`
-      );
+      sendMessage(window.parent, 'http://localhost:5173', 'COMMUNICATION', {
+        action: 'ADD_TO_CART',
+        payload: {
+          title: this.book.title,
+          image: this.book.images[0],
+          bookId: this.book.id,
+          quantity: this.quantity,
+        },
+      });
     },
     getAction(actionType) {
       const actions = {

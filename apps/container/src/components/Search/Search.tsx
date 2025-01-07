@@ -7,21 +7,10 @@ interface SearchProps {
 
 const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
-  const debounceTime = 300;
-
-  useEffect(() => {
-    const handler = setTimeout(() => {
-      onSearch(query);
-    }, debounceTime);
-
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [query, debounceTime, onSearch]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    debugger;
     setQuery(event.target.value);
+    onSearch(event.target.value);
   };
 
   return (
