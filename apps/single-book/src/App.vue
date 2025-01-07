@@ -183,15 +183,20 @@ export default {
       this.mainImage = image;
     },
     addToCart() {
-      sendMessage(window.parent, 'http://localhost:5173', 'COMMUNICATION', {
-        action: 'ADD_TO_CART',
-        payload: {
-          title: this.book.title,
-          image: this.book.images[0],
-          bookId: this.book.id,
-          quantity: this.quantity,
-        },
-      });
+      sendMessage(
+        window.parent,
+        import.meta.env.VITE_CONTAINER_APP_URL,
+        'COMMUNICATION',
+        {
+          action: 'ADD_TO_CART',
+          payload: {
+            title: this.book.title,
+            image: this.book.images[0],
+            bookId: this.book.id,
+            quantity: this.quantity,
+          },
+        }
+      );
     },
     getAction(actionType) {
       const actions = {

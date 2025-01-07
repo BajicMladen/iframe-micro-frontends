@@ -45,7 +45,7 @@
   })
 
   const showSingleBook = e => {
-    sendMessage(window.parent, 'http://localhost:5173', 'COMMUNICATION', {
+    sendMessage(window.parent, import.meta.env.VITE_CONTAINER_APP_URL, 'COMMUNICATION', {
       action: 'SHOW_SINGLE_BOOK',
       payload: e.detail.id,
     })

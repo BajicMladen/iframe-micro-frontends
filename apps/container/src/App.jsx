@@ -8,12 +8,12 @@ import {
 
 const IFRAME_ACTION_ROUTER = {
   SHOW_SINGLE_BOOK: {
-    origin: 'http://localhost:5175',
+    origin: import.meta.env.VITE_SINGLE_BOOK_APP_URL,
     type: 'COMMUNICATION',
     frameName: 'single-book',
   },
   SEARCH_BOOK_LIST: {
-    origin: 'http://localhost:5174',
+    origin: import.meta.env.VITE_BOOK_LIST_APP_URL,
     type: 'COMMUNICATION',
     frameName: 'book-list',
   },
@@ -106,7 +106,7 @@ function App() {
         cart={cart}
       ></Header>
       <iframe
-        src='http://localhost:5175'
+        src={import.meta.env.VITE_SINGLE_BOOK_APP_URL}
         title='Single Book'
         name='single-book'
         id='single-book'
@@ -119,7 +119,7 @@ function App() {
         }}
       />
       <iframe
-        src='http://localhost:5174'
+        src={import.meta.env.VITE_BOOK_LIST_APP_URL}
         title='Book List'
         name='book-list'
         id='book-list'
