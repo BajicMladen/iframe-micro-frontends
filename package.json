@@ -1,6 +1,20 @@
 {
     "name": "iframe-microfrontend-monorepo",
     "private": true,
+    "scripts": {
+        "dev": "pnpm --parallel -r dev",
+        "dev:container": "pnpm --filter container dev",
+        "dev:book-list": "pnpm --filter book-list dev",
+        "dev:single-book": "pnpm --filter single-book dev",
+        "build": "pnpm -r build",
+        "build:container": "pnpm --filter container build",
+        "build:book-list": "pnpm --filter book-list build",
+        "build:single-book": "pnpm --filter single-book build",
+        "preview": "pnpm -r preview",
+        "clean": "pnpm -r exec rm -rf node_modules dist",
+        "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+        "format:check": "prettier --check \"**/*.{js,jsx,ts,tsx,json,css,md}\""
+    },
     "devDependencies": {
         "autoprefixer": "^10.4.20",
         "postcss": "^8.4.49",

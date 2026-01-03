@@ -6,7 +6,7 @@ export default defineConfig({
   envDir: '../../shared/',
   server: {
     headers: {
-      'Content-Security-Policy': "frame-ancestors 'self' *;",
+      'Content-Security-Policy': "frame-ancestors 'self' http://localhost:5173 https://iframe-micro-frontends-container.vercel.app;",
     },
     port: 5174,
   },

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, ChangeEvent } from 'react';
 import { FaSearch } from 'react-icons/fa';
+import { UI_CONFIG } from '../../../../../shared/config';
 
 interface SearchProps {
   onSearch: (query: string) => void;
@@ -8,9 +9,21 @@ interface SearchProps {
 const Search: React.FC<SearchProps> = ({ onSearch }) => {
   const [query, setQuery] = useState('');
 
+  // Debounce search to avoid excessive API calls
+  useEffect(() => {
+    const debounceTimer = setTimeout(() => {
+      if (query.trim()) {
+        onSearch(query);
+      }
+    }, UI_CONFIG.DEBOUNCE_DELAY);
+
+    return () => {
+      clearTimeout(debounceTimer);
+    };
+  }, [query, onSearch]);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setQuery(event.target.value);
-    onSearch(event.target.value);
   };
 
   return (

@@ -1,5 +1,7 @@
 <script>
-  import { sendMessage } from '../../../../../shared/communication'
+  import { sendMessage, getAppOrigin } from '../../../../../shared/communication'
+  import { MESSAGE_ACTIONS, MESSAGE_TYPE } from '../../../../../shared/types'
+  import { UI_CONFIG } from '../../../../../shared/config'
   import Button from './Button.svelte'
   import { createEventDispatcher } from 'svelte'
 
@@ -8,12 +10,18 @@
   const dispatch = createEventDispatcher()
 
   const addToCart = () => {
-    sendMessage(window.parent, import.meta.env.VITE_CONTAINER_APP_URL, 'COMMUNICATION', {
-      action: 'ADD_TO_CART',
+    const price = book.saleInfo?.listPrice?.amount || UI_CONFIG.DEFAULT_BOOK_PRICE;
+
+    sendMessage(window.parent, getAppOrigin('container'), MESSAGE_TYPE, {
+      action: MESSAGE_ACTIONS.ADD_TO_CART,
       payload: {
-        title: book.volumeInfo.title,
-        image: book.volumeInfo.imageLinks?.thumbnail,
-        bookId: book.id,
+        book: {
+          id: book.id,
+          title: book.volumeInfo.title,
+          author: book.volumeInfo.authors?.join(', ') || 'Unknown',
+          thumbnail: book.volumeInfo.imageLinks?.thumbnail,
+          price: price,
+        },
         quantity: 1,
       },
     })

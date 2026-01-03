@@ -1,12 +1,16 @@
 <script>
-  import { onMount } from 'svelte'
+  import { onMount, afterUpdate } from 'svelte'
   import { fetchBooks } from './api/api'
   import BookItem from './lib/components/BookItem.svelte'
-  import { registerMessageListener, sendMessage } from '../../../shared/communication'
+  import { registerMessageListener, sendMessage, getAppOrigin } from '../../../shared/communication'
+  import { MESSAGE_ACTIONS, MESSAGE_TYPE } from '../../../shared/types'
+  import { API_CONFIG, FRAME_NAMES } from '../../../shared/config'
+  import { setupAutoResize } from '../../../shared/utils'
 
   let books = []
   let isLoading = true
   let error = null
+  let cleanupResize = null
 
   async function getBooksFromGoogleApi(query) {
     try {
@@ -22,7 +26,7 @@
 
   function getAction(actionType) {
     const actions = {
-      SEARCH_BOOK_LIST: getBooksFromGoogleApi,
+      [MESSAGE_ACTIONS.SEARCH_BOOK_LIST]: getBooksFromGoogleApi,
     }
     return actions[actionType] || noop
   }
@@ -32,22 +36,40 @@
   }
 
   onMount(() => {
-    const unregisterListener = registerMessageListener('COMMUNICATION', data => {
+    const unregisterListener = registerMessageListener(MESSAGE_TYPE, data => {
       const action = getAction(data.action)
-      action(data.payload)
+      if (data.action === MESSAGE_ACTIONS.SEARCH_BOOK_LIST) {
+        action(data.payload.query)
+      } else {
+        action(data.payload)
+      }
     })
 
+    // Setup auto-resize
+    cleanupResize = setupAutoResize(FRAME_NAMES.BOOK_LIST)
+
     ;(async () => {
-      await getBooksFromGoogleApi('javascript')
+      await getBooksFromGoogleApi(API_CONFIG.DEFAULT_SEARCH_QUERY)
     })()
 
-    return unregisterListener
+    return () => {
+      unregisterListener()
+      if (cleanupResize) cleanupResize()
+    }
+  })
+
+  afterUpdate(() => {
+    // Send height update after content changes
+    sendMessage(window.parent, getAppOrigin('container'), MESSAGE_TYPE, {
+      action: MESSAGE_ACTIONS.RESIZE_IFRAME,
+      payload: { height: document.body.scrollHeight, frameName: FRAME_NAMES.BOOK_LIST },
+    })
   })
 
   const showSingleBook = e => {
-    sendMessage(window.parent, import.meta.env.VITE_CONTAINER_APP_URL, 'COMMUNICATION', {
-      action: 'SHOW_SINGLE_BOOK',
-      payload: e.detail.id,
+    sendMessage(window.parent, getAppOrigin('container'), MESSAGE_TYPE, {
+      action: MESSAGE_ACTIONS.SHOW_SINGLE_BOOK,
+      payload: { bookId: e.detail.id },
     })
   }
 </script>

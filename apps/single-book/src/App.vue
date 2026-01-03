@@ -3,7 +3,7 @@
     <!-- Placeholder View -->
     <div
       v-if="!book.title"
-      class="flex flex-col items-center justify-center gap-4 p-8 w-4/5 text-center bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg"
+      class="flex flex-col items-center justify-center gap-2 p-8 w-4/5 text-center bg-gradient-to-r from-purple-500 to-indigo-500 text-white rounded-lg"
     >
       <h1 class="text-4xl font-bold">Welcome to B-World!</h1>
       <p class="text-lg">
@@ -16,7 +16,7 @@
           <img
             :src="artOfCoding"
             alt="Featured Book Cover"
-            class="w-52 h-68 object-cover rounded-lg shadow-md"
+            class="w-40 object-cover rounded-lg shadow-md"
           />
           <h2 class="text-2xl font-semibold mt-4">The Art of Coding</h2>
           <p class="text-sm">
@@ -113,7 +113,12 @@ import artOfCoding from './assets/artOfCoding.jpg';
 import {
   registerMessageListener,
   sendMessage,
+  getAppOrigin,
 } from '../../../shared/communication';
+import { MESSAGE_ACTIONS, MESSAGE_TYPE } from '../../../shared/types';
+import { UI_CONFIG, FRAME_NAMES } from '../../../shared/config';
+import { setupAutoResize } from '../../../shared/utils';
+import { stripHTML, sanitizeBookData } from '../../../shared/sanitization';
 
 export default {
   components: {
@@ -136,13 +141,13 @@ export default {
       },
       mainImage: '',
       quantity: 1,
+      cleanupResize: null,
     };
   },
   methods: {
     parseHTMLtoText(htmlString) {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(htmlString, 'text/html');
-      return doc.body.textContent.trim();
+      // Use the shared sanitization utility
+      return stripHTML(htmlString || '').trim();
     },
     async fetchBookDetails(bookId) {
       try {
@@ -152,12 +157,15 @@ export default {
         const data = await response.json();
         const volumeInfo = data.volumeInfo;
 
-        this.book = {
+        // Sanitize book data to prevent XSS
+        const rawBook = {
           id: data.id,
           title: volumeInfo.title,
           author: volumeInfo.authors?.join(', ') || 'Unknown Author',
           rating: volumeInfo.averageRating || 0,
-          price: (data.saleInfo?.listPrice?.amount || 12.49).toFixed(2),
+          price: (
+            data.saleInfo?.listPrice?.amount || UI_CONFIG.MAX_BOOK_PRICE
+          ).toFixed(2),
           description:
             this.parseHTMLtoText(volumeInfo.description)
               .substring(0, 500)
@@ -173,6 +181,9 @@ export default {
               'https://via.placeholder.com/150',
           ],
         };
+
+        // Apply sanitization
+        this.book = sanitizeBookData(rawBook);
         this.mainImage = this.book.images[0];
         this.quantity = 1;
       } catch (error) {
@@ -183,24 +194,23 @@ export default {
       this.mainImage = image;
     },
     addToCart() {
-      sendMessage(
-        window.parent,
-        import.meta.env.VITE_CONTAINER_APP_URL,
-        'COMMUNICATION',
-        {
-          action: 'ADD_TO_CART',
-          payload: {
+      sendMessage(window.parent, getAppOrigin('container'), MESSAGE_TYPE, {
+        action: MESSAGE_ACTIONS.ADD_TO_CART,
+        payload: {
+          book: {
+            id: this.book.id,
             title: this.book.title,
-            image: this.book.images[0],
-            bookId: this.book.id,
-            quantity: this.quantity,
+            author: this.book.author,
+            thumbnail: this.book.images[0],
+            price: parseFloat(this.book.price),
           },
-        }
-      );
+          quantity: this.quantity,
+        },
+      });
     },
     getAction(actionType) {
       const actions = {
-        SHOW_SINGLE_BOOK: this.fetchBookDetails,
+        [MESSAGE_ACTIONS.SHOW_SINGLE_BOOK]: this.fetchBookDetails,
       };
       return actions[actionType] || this.noop;
     },
@@ -209,18 +219,31 @@ export default {
     },
   },
   mounted() {
-    this.unregisterListener = registerMessageListener(
-      'COMMUNICATION',
-      (data) => {
-        const action = this.getAction(data.action);
-        action(data.payload);
-      }
-    );
+    this.unregisterListener = registerMessageListener(MESSAGE_TYPE, (data) => {
+      const action = this.getAction(data.action);
+      action(data.payload.bookId || data.payload);
+    });
+
+    // Setup auto-resize
+    this.cleanupResize = setupAutoResize(FRAME_NAMES.SINGLE_BOOK);
+  },
+  updated() {
+    // Send height update after content changes
+    sendMessage(window.parent, getAppOrigin('container'), MESSAGE_TYPE, {
+      action: MESSAGE_ACTIONS.RESIZE_IFRAME,
+      payload: {
+        height: document.body.scrollHeight,
+        frameName: FRAME_NAMES.SINGLE_BOOK,
+      },
+    });
   },
   beforeDestroy() {
     // Clean up the listener on component destroy
     if (this.unregisterListener) {
       this.unregisterListener();
+    }
+    if (this.cleanupResize) {
+      this.cleanupResize();
     }
   },
 };
