@@ -35,7 +35,7 @@ export const fetchBooks = async query => {
       const apiKey = API_CONFIG.GOOGLE_BOOKS_API_KEY ? `&key=${API_CONFIG.GOOGLE_BOOKS_API_KEY}` : ''
       const res = await fetch(
         `${API_CONFIG.GOOGLE_BOOKS_BASE_URL}?q=${encodeURIComponent(queryString)}&maxResults=${API_CONFIG.MAX_RESULTS}${apiKey}`,
-        { signal: controller.signal }
+        { signal: controller.signal },
       )
 
       clearTimeout(timeoutId)
@@ -64,7 +64,7 @@ export const fetchBooks = async query => {
       fetchWithRetry,
       API_CONFIG.MAX_RETRIES,
       API_CONFIG.RETRY_DELAY,
-      err => !(err instanceof QuotaExceededError)
+      err => !(err instanceof QuotaExceededError),
     )
 
     // Cache the successful response
@@ -75,7 +75,7 @@ export const fetchBooks = async query => {
     return books
   } catch (error) {
     if (error instanceof QuotaExceededError) {
-      console.warn('Google Books API daily quota exceeded, showing sample books.')
+      console.warn('Google Books API daily quota exceeded, showing sample books!')
       return { isQuotaExceeded: true }
     }
     console.error('Failed to fetch books after retries:', error)

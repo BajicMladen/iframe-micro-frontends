@@ -151,7 +151,9 @@ export default {
     },
     async fetchBookDetails(bookId) {
       try {
-        const apiKey = API_CONFIG.GOOGLE_BOOKS_API_KEY ? `?key=${API_CONFIG.GOOGLE_BOOKS_API_KEY}` : ''
+        const apiKey = API_CONFIG.GOOGLE_BOOKS_API_KEY
+          ? `?key=${API_CONFIG.GOOGLE_BOOKS_API_KEY}`
+          : '';
         const response = await fetch(
           `https://www.googleapis.com/books/v1/volumes/${bookId}${apiKey}`
         );
@@ -216,7 +218,7 @@ export default {
       return actions[actionType] || this.noop;
     },
     noop() {
-      console.warn('Unsupported action type received.');
+      console.warn('Unsupported action type received!');
     },
   },
   mounted() {
