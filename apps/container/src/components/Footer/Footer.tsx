@@ -84,7 +84,7 @@ const FooterSection = ({ title, items, handleSearch }) => (
 
 const Footer = ({ handleSearch }) => {
   return (
-    <footer className='bg-purple-400 text-gray-100'>
+    <footer id='main-footer' className='bg-purple-400 text-gray-100'>
       <div className='border-b border-white py-4'>
         <div className='flex justify-between container mx-auto w-[80%]'>
           <div className='flex flex-col justify-between'>
@@ -111,7 +111,9 @@ const Footer = ({ handleSearch }) => {
               If you have questions, <br /> you can call us, <br /> or we can do
               it for you.
             </div>
-            <Button variant='primary'>Request a Call</Button>
+            <a href='tel:+15551234567' className='no-underline'>
+              <Button variant='primary'>Request a Call</Button>
+            </a>
           </div>
         </div>
       </div>

@@ -23,7 +23,7 @@
             Mohammad Majid al-Rifaie, Anna Ursyn, Theodor Wyeld
           </p>
         </div>
-        <div class="flex flex-col text-left">
+        <div class="flex flex-col text-left gap-4">
           <p class="text-xl font-medium">Price: $24.99</p>
           <p class="">
             Discover the secrets to becoming a coding expert. This book offers
@@ -34,6 +34,7 @@
             you through mastering key concepts, writing clean code, and solving
             complex problems efficiently
           </p>
+          <Button @handleClick="browseBooks" :variant="'primary'">Browse Books</Button>
         </div>
       </div>
     </div>
@@ -216,6 +217,12 @@ export default {
         [MESSAGE_ACTIONS.SHOW_SINGLE_BOOK]: this.fetchBookDetails,
       };
       return actions[actionType] || this.noop;
+    },
+    browseBooks() {
+      sendMessage(window.parent, getAppOrigin('container'), MESSAGE_TYPE, {
+        action: MESSAGE_ACTIONS.SEARCH_BOOK_LIST,
+        payload: { query: 'coding' },
+      });
     },
     noop() {
       console.warn('Unsupported action type received!');

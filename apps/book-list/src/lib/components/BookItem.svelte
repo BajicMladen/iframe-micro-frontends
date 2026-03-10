@@ -59,7 +59,7 @@
   <div class="flex justify-center items-center p-4">
     <Button
       on:click={e => {
-        event.stopPropagation()
+        e.stopPropagation()
         addToCart()
       }}>Add to Cart</Button
     >
