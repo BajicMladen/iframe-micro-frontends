@@ -21,7 +21,6 @@
       const result = await fetchBooks(query)
       if (result && result.isQuotaExceeded) {
         quotaExceeded = true
-        books = result.items
       } else {
         books = result
       }
@@ -88,10 +87,9 @@
     <p class="text-center text-lg">Loading books...</p>
   {:else if error}
     <p class="text-center text-lg text-red-500">{error}</p>
+  {:else if quotaExceeded}
+    <p class="text-center text-lg text-amber-500">Google Books API daily quota exceeded. Please try again tomorrow.</p>
   {:else}
-    {#if quotaExceeded}
-      <p class="text-center text-sm text-amber-500 mb-2">Google Books API daily quota exceeded — showing sample books.</p>
-    {/if}
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 p-4 w-4/5">
       {#each books as book}
         <BookItem {book} on:showSingleBook={showSingleBook} />

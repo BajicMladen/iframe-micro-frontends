@@ -12,45 +12,6 @@ class QuotaExceededError extends Error {
 // Create a cache instance for API responses
 const booksCache = new SimpleCache(CACHE_CONFIG.MAX_CACHE_SIZE)
 
-const MOCK_BOOKS = [
-  {
-    id: 'mock-1',
-    volumeInfo: {
-      title: 'JavaScript: The Good Parts',
-      authors: ['Douglas Crockford'],
-      description: 'A classic guide to the best features of JavaScript.',
-      imageLinks: { thumbnail: 'https://placehold.co/128x192?text=JS' },
-    },
-  },
-  {
-    id: 'mock-2',
-    volumeInfo: {
-      title: 'You Don\'t Know JS',
-      authors: ['Kyle Simpson'],
-      description: 'A deep dive into the core mechanisms of JavaScript.',
-      imageLinks: { thumbnail: 'https://placehold.co/128x192?text=YDKJS' },
-    },
-  },
-  {
-    id: 'mock-3',
-    volumeInfo: {
-      title: 'Eloquent JavaScript',
-      authors: ['Marijn Haverbeke'],
-      description: 'A modern introduction to programming with JavaScript.',
-      imageLinks: { thumbnail: 'https://placehold.co/128x192?text=EJS' },
-    },
-  },
-  {
-    id: 'mock-4',
-    volumeInfo: {
-      title: 'Clean Code',
-      authors: ['Robert C. Martin'],
-      description: 'A handbook of agile software craftsmanship.',
-      imageLinks: { thumbnail: 'https://placehold.co/128x192?text=CC' },
-    },
-  },
-]
-
 export const fetchBooks = async query => {
   // Sanitize the search query
   const sanitizedQuery = sanitizeInput(query || API_CONFIG.DEFAULT_SEARCH_QUERY)
@@ -115,7 +76,7 @@ export const fetchBooks = async query => {
   } catch (error) {
     if (error instanceof QuotaExceededError) {
       console.warn('Google Books API daily quota exceeded, showing sample books.')
-      return { items: MOCK_BOOKS, isQuotaExceeded: true }
+      return { isQuotaExceeded: true }
     }
     console.error('Failed to fetch books after retries:', error)
     throw error
