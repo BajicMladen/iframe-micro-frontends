@@ -78,7 +78,8 @@ export function setupAutoResize(frameName: string): () => void {
 export async function retryWithBackoff<T>(
   fn: () => Promise<T>,
   maxRetries: number = 3,
-  baseDelay: number = 1000
+  baseDelay: number = 1000,
+  shouldRetry: (error: Error) => boolean = () => true
 ): Promise<T> {
   let lastError: Error;
 
@@ -87,6 +88,9 @@ export async function retryWithBackoff<T>(
       return await fn();
     } catch (error) {
       lastError = error as Error;
+      if (!shouldRetry(lastError)) {
+        throw lastError;
+      }
       if (attempt < maxRetries - 1) {
         const delay = baseDelay * Math.pow(2, attempt);
         await new Promise((resolve) => setTimeout(resolve, delay));

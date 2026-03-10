@@ -116,7 +116,7 @@ import {
   getAppOrigin,
 } from '../../../shared/communication';
 import { MESSAGE_ACTIONS, MESSAGE_TYPE } from '../../../shared/types';
-import { UI_CONFIG, FRAME_NAMES } from '../../../shared/config';
+import { UI_CONFIG, FRAME_NAMES, API_CONFIG } from '../../../shared/config';
 import { setupAutoResize } from '../../../shared/utils';
 import { stripHTML, sanitizeBookData } from '../../../shared/sanitization';
 
@@ -151,8 +151,9 @@ export default {
     },
     async fetchBookDetails(bookId) {
       try {
+        const apiKey = API_CONFIG.GOOGLE_BOOKS_API_KEY ? `?key=${API_CONFIG.GOOGLE_BOOKS_API_KEY}` : ''
         const response = await fetch(
-          `https://www.googleapis.com/books/v1/volumes/${bookId}`
+          `https://www.googleapis.com/books/v1/volumes/${bookId}${apiKey}`
         );
         const data = await response.json();
         const volumeInfo = data.volumeInfo;

@@ -5,6 +5,7 @@
 // API Configuration
 export const API_CONFIG = {
   GOOGLE_BOOKS_BASE_URL: 'https://www.googleapis.com/books/v1/volumes',
+  GOOGLE_BOOKS_API_KEY: import.meta.env.VITE_GOOGLE_BOOKS_API_KEY ?? '',
   MAX_RESULTS: 8,
   DEFAULT_SEARCH_QUERY: 'javascript',
   REQUEST_TIMEOUT: 10000, // 10 seconds
