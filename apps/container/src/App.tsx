@@ -50,7 +50,7 @@ function App(): JSX.Element {
     }
 
     // Register a listener for messages from the microfrontends
-    console.log('Setting up message listener');
+    console.log('Setting up message listener!');
     const unregisterListener = registerMessageListener(
       MESSAGE_TYPE,
       (data: MessagePayload) => {
